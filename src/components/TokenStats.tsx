@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { parseEther, formatEther } from "viem";
+import { useWallet } from "@suiet/wallet-kit";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { InfoIcon, CoinsIcon, RefreshCwIcon, CheckCircleIcon, AlertCircleIcon } from "lucide-react";
 import { contractAddresses, contractABIs, blockExplorer } from "@/lib/contracts";
@@ -11,59 +10,39 @@ import { useAuth } from "@/hooks/useAuth";
 export default function TokenMintPage() {
     const [amount, setAmount] = useState<number>(1);
 
-    const { address, isConnected } = useAccount();
+    const { address, connected: isConnected } = useWallet();
     const { isAuthenticated } = useAuth();
 
-    // Read contract data
-    const { data: mintPrice } = useReadContract({
-        address: contractAddresses.tokenMint as `0x${string}`,
-        abi: contractABIs.tokenMint,
-        functionName: "mintPrice",
-    });
-
-    const { data: remainingAllowance } = useReadContract({
-        address: contractAddresses.tokenMint as `0x${string}`,
-        abi: contractABIs.tokenMint,
-        functionName: "getRemainingMintAllowance",
-        args: [address || "0x0000000000000000000000000000000000000000"],
-        query: {
-            enabled: !!address
-        }
-    });
-
-    const { data: tokenSymbol } = useReadContract({
-        address: contractAddresses.tokenMint as `0x${string}`,
-        abi: contractABIs.tokenMint,
-        functionName: "symbol",
-    });
-
-
-    const { data: tokenBalance } = useReadContract({
-        address: contractAddresses.tokenMint as `0x${string}`,
-        abi: contractABIs.tokenMint,
-        functionName: "balanceOf",
-        args: [address || "0x0000000000000000000000000000000000000000"],
-        query: {
-            enabled: !!address
-        }
-    });
+    // Mock state for contract data - in a real app these would be fetched from Sui contract
+    const [mintPrice, setMintPrice] = useState<string>("10000000"); // in MIST (smallest unit in Sui)
+    const [remainingAllowance, setRemainingAllowance] = useState<number>(10);
+    const [tokenSymbol, setTokenSymbol] = useState<string>("GAME");
+    const [tokenBalance, setTokenBalance] = useState<number>(1000);
 
     // Format balance for display
-    const formattedBalance = tokenBalance && typeof tokenBalance === 'bigint'
-        ? Number(formatEther(tokenBalance))
-        : 0;
-
-    // Add this right before the return statement
+    const formattedBalance = tokenBalance || 0;
+    
+    // In a real implementation, you would fetch these from your Sui contract
     useEffect(() => {
-        console.log("Mint state:", {
+        if (address) {
+            // This is where you would fetch the user's token balance and remaining allowance
+            // For now, we'll just use mock values
+            setRemainingAllowance(10);
+            setTokenBalance(1000);
+        }
+    }, [address]);
+
+    // Log state changes
+    useEffect(() => {
+        console.log("Token stats state:", {
             address,
             isConnected,
             isAuthenticated,
-            remainingAllowance: Number(remainingAllowance || 0),
+            remainingAllowance,
             mintPrice,
-            amount
+            tokenBalance
         });
-    }, [address, isConnected, isAuthenticated, remainingAllowance, mintPrice, amount]);
+    }, [address, isConnected, isAuthenticated, remainingAllowance, mintPrice, tokenBalance]);
 
     return (
         <div className="container max-w-4xl py-2">
@@ -93,7 +72,7 @@ export default function TokenMintPage() {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-3xl font-bold">{Number(remainingAllowance ?? 0).toString()}</p>
+                        <p className="text-3xl font-bold">{remainingAllowance.toString()}</p>
                         <p className="text-sm text-slate-400">Tokens available today</p>
                     </CardContent>
                 </Card>
@@ -107,7 +86,7 @@ export default function TokenMintPage() {
                     </CardHeader>
                     <CardContent>
                         <p className="text-3xl font-bold">
-                            {mintPrice ? formatEther(mintPrice as bigint) : "0"} ETH
+                            {mintPrice ? (Number(mintPrice) / 1000000000).toFixed(9) : "0"} SUI
                         </p>
                         <p className="text-sm text-slate-400">Per token</p>
                     </CardContent>

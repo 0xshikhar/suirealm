@@ -1,7 +1,15 @@
 'use client';
 
 import { FC } from 'react';
-import { AllDefaultWallets, defineStashedWallet, WalletProvider } from '@suiet/wallet-kit';
+import {
+    WalletProvider,
+    SuietWallet,
+    SuiWallet,
+    EthosWallet,
+    IDefaultWallet,
+    defineStashedWallet
+} from '@suiet/wallet-kit';
+import '@suiet/wallet-kit/style.css';
 import { EnokiFlowProvider } from '@mysten/enoki/react';
 import {
     createNetworkConfig,
@@ -35,7 +43,9 @@ const Providers: FC<any> = ({ children }) => {
         >
             <WalletProvider
                 defaultWallets={[
-                    ...AllDefaultWallets,
+                    SuietWallet,
+                    SuiWallet,
+                    EthosWallet,
                     defineStashedWallet({
                         appName: 'Nexus Agent'
                     })

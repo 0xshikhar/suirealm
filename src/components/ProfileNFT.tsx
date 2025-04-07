@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
-import { parseEther, formatEther } from "viem";
+import { useWallet } from "@suiet/wallet-kit";
+import { SUI_CLOCK_OBJECT_ID } from "@mysten/sui/utils";
+import { Transaction } from "@mysten/sui/transactions";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,7 +25,6 @@ import {
 } from "lucide-react";
 import { contractAddresses, contractABIs, blockExplorer } from "@/lib/contracts";
 import { useAuth } from "@/hooks/useAuth";
-import { readContract } from "viem/actions";
 
 export default function NFTProfilePage() {
     // Form state
@@ -43,7 +43,7 @@ export default function NFTProfilePage() {
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    const { address, isConnected } = useAccount();
+    const { address, connected: isConnected, signAndExecuteTransactionBlock } = useWallet();
     const { isAuthenticated } = useAuth();
 
     // File upload ref
@@ -57,28 +57,25 @@ export default function NFTProfilePage() {
         }, 5000);
     };
 
-    // Read contract data
-    const { data: mintPrice } = useReadContract({
-        address: contractAddresses.nft as `0x${string}`,
-        abi: contractABIs.nft,
-        functionName: "mintPrice",
-    });
+    // For demonstration purposes - would need actual implementation for reading contract data in Sui
+    const [mintPrice, setMintPrice] = useState<string>("10000000"); // Example price in MIST (Sui's smallest unit)
 
-    // Write contract
-    const { data: hash, isPending, writeContract } = useWriteContract();
+    // Track transaction state manually
+    const [txHash, setTxHash] = useState<string | null>(null);
+    const [isPending, setIsPending] = useState(false);
+    const [isConfirming, setIsConfirming] = useState(false);
+    const [isConfirmed, setIsConfirmed] = useState(false);
 
-    // Wait for transaction receipt
-    const { isLoading: isConfirming, isSuccess: isConfirmed } =
-        useWaitForTransactionReceipt({
-            hash,
-        });
-
-    const { data: existingProfile } = useReadContract({
-        address: contractAddresses.nft as `0x${string}`,
-        abi: contractABIs.nft,
-        functionName: "getProfile",
-        args: [BigInt(tokenId)],
-    });
+    // Mock implementation for getting profile data
+    const [existingProfile, setExistingProfile] = useState<any>(null);
+    
+    // This would be replaced with actual Sui contract call
+    useEffect(() => {
+        if (tokenId) {
+            // Example implementation - in a real app, this would call the Sui contract
+            // setExistingProfile({...profile data});
+        }
+    }, [tokenId]);
 
     // Fetch profile data
     const fetchProfile = async () => {
@@ -129,15 +126,45 @@ export default function NFTProfilePage() {
                 return;
             }
 
-            const value = mintPrice ? mintPrice.toString() : "0";
-
-            writeContract({
-                address: contractAddresses.nft as `0x${string}`,
-                abi: contractABIs.nft,
-                functionName: "createProfile",
-                args: [name, bio, socialLink, imageUrl],
-                value: BigInt(value),
-            });
+            setIsPending(true);
+            
+            try {
+                // Create a new transaction block
+                const txb = new Transaction();
+                
+                // Call the module function - this is an example, adjust to your contract
+                txb.moveCall({
+                    target: `${contractAddresses.nft}::profile::create_profile`,
+                    arguments: [
+                        txb.pure.string(name),
+                        txb.pure.string(bio),
+                        txb.pure.string(socialLink),
+                        txb.pure.string(imageUrl),
+                        // Add any other arguments your contract needs
+                    ],
+                });
+                
+                // Sign and execute the transaction
+                const result = await signAndExecuteTransactionBlock({
+                    transactionBlock: txb,
+                });
+                
+                setTxHash(result.digest);
+                setIsConfirming(true);
+                setIsPending(false);
+                
+                // For demo purposes, we'll just set it as confirmed after a delay
+                setTimeout(() => {
+                    setIsConfirming(false);
+                    setIsConfirmed(true);
+                    setIsSuccess(true);
+                    resetStates();
+                }, 2000);
+            } catch (err) {
+                console.error("Transaction error:", err);
+                setError("Transaction failed. Please try again.");
+                setIsPending(false);
+            }
         } catch (err) {
             console.error("Error creating profile:", err);
             setError(err instanceof Error ? err.message : "Failed to create profile");
@@ -169,12 +196,45 @@ export default function NFTProfilePage() {
                 return;
             }
 
-            writeContract({
-                address: contractAddresses.nft as `0x${string}`,
-                abi: contractABIs.nft,
-                functionName: "updateProfile",
-                args: [BigInt(tokenId), name, bio, socialLink],
-            });
+            setIsPending(true);
+            
+            try {
+                // Create a new transaction block
+                const txb = new Transaction();
+                
+                // Call the module function - this is an example, adjust to your contract
+                txb.moveCall({
+                    target: `${contractAddresses.nft}::profile::update_profile`,
+                    arguments: [
+                        txb.pure.string(tokenId),
+                        txb.pure.string(name),
+                        txb.pure.string(bio),
+                        txb.pure.string(socialLink),
+                        // Add any other arguments your contract needs
+                    ],
+                });
+                
+                // Sign and execute the transaction
+                const result = await signAndExecuteTransactionBlock({
+                    transactionBlock: txb,
+                });
+                
+                setTxHash(result.digest);
+                setIsConfirming(true);
+                setIsPending(false);
+                
+                // For demo purposes, we'll just set it as confirmed after a delay
+                setTimeout(() => {
+                    setIsConfirming(false);
+                    setIsConfirmed(true);
+                    setIsSuccess(true);
+                    resetStates();
+                }, 2000);
+            } catch (err) {
+                console.error("Transaction error:", err);
+                setError("Transaction failed. Please try again.");
+                setIsPending(false);
+            }
         } catch (err) {
             console.error("Error updating profile:", err);
             setError(err instanceof Error ? err.message : "Failed to update profile");
@@ -206,12 +266,43 @@ export default function NFTProfilePage() {
                 return;
             }
 
-            writeContract({
-                address: contractAddresses.nft as `0x${string}`,
-                abi: contractABIs.nft,
-                functionName: "updateProfileImage",
-                args: [BigInt(tokenId), imageUrl],
-            });
+            setIsPending(true);
+            
+            try {
+                // Create a new transaction block
+                const txb = new Transaction();
+                
+                // Call the module function - this is an example, adjust to your contract
+                txb.moveCall({
+                    target: `${contractAddresses.nft}::profile::update_profile_image`,
+                    arguments: [
+                        txb.pure.string(tokenId),
+                        txb.pure.string(imageUrl),
+                        // Add any other arguments your contract needs
+                    ],
+                });
+                
+                // Sign and execute the transaction
+                const result = await signAndExecuteTransactionBlock({
+                    transactionBlock: txb,
+                });
+                
+                setTxHash(result.digest);
+                setIsConfirming(true);
+                setIsPending(false);
+                
+                // For demo purposes, we'll just set it as confirmed after a delay
+                setTimeout(() => {
+                    setIsConfirming(false);
+                    setIsConfirmed(true);
+                    setIsSuccess(true);
+                    resetStates();
+                }, 2000);
+            } catch (err) {
+                console.error("Transaction error:", err);
+                setError("Transaction failed. Please try again.");
+                setIsPending(false);
+            }
         } catch (err) {
             console.error("Error updating profile image:", err);
             setError(err instanceof Error ? err.message : "Failed to update profile image");
@@ -305,18 +396,6 @@ export default function NFTProfilePage() {
                                     </p>
                                 </div>
 
-                                <Separator />
-
-                                <div className="space-y-2">
-                                    <Label>Mint Price</Label>
-                                    <div className="text-2xl font-bold">
-                                        {mintPrice ? formatEther(mintPrice as bigint) : "0"} ETH
-                                    </div>
-                                    <p className="text-sm text-muted-foreground">
-                                        Plus gas fees
-                                    </p>
-                                </div>
-
                                 {error && (
                                     <Alert variant="destructive">
                                         <AlertCircleIcon className="h-4 w-4" />
@@ -331,9 +410,9 @@ export default function NFTProfilePage() {
                                         <AlertTitle className="text-green-800">Success!</AlertTitle>
                                         <AlertDescription className="text-green-700">
                                             Profile NFT created successfully!{" "}
-                                            {hash && (
+                                            {txHash && (
                                                 <a
-                                                    href={`${blockExplorer.nft.split("?")[0]}/tx/${hash}`}
+                                                    href={`${blockExplorer.nft.split("?")[0]}/tx/${txHash}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="underline font-medium"
@@ -529,9 +608,9 @@ export default function NFTProfilePage() {
                                         <AlertTitle className="text-green-800">Success!</AlertTitle>
                                         <AlertDescription className="text-green-700">
                                             Profile updated successfully!{" "}
-                                            {hash && (
+                                            {txHash && (
                                                 <a
-                                                    href={`${blockExplorer.nft.split("?")[0]}/tx/${hash}`}
+                                                    href={`${blockExplorer.nft.split("?")[0]}/tx/${txHash}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="underline font-medium"

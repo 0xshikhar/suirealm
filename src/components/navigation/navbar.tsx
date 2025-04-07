@@ -7,7 +7,7 @@ import { AiOutlineSearch, AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { cn } from "@/lib/utils";
-import { ConnectButton } from '@rainbow-me/rainbowkit'
+import { ConnectButton, useWallet } from '@suiet/wallet-kit'
 import { FaFaucetDrip } from "react-icons/fa6";
 import { User } from "lucide-react";
 
@@ -16,6 +16,7 @@ const Navbar = () => {
 	const router = useRouter();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const { address, connected } = useWallet();
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
@@ -89,7 +90,16 @@ const Navbar = () => {
 						<FaFaucetDrip className="text-2xl text-[#98ee2c]" />
 					</div>
 					<div className="px-4">
-						<ConnectButton />
+						<div className="flex items-center gap-4">
+							{connected && (
+								<span className="text-sm text-white">
+									{address?.slice(0, 6)}...{address?.slice(-4)}
+								</span>
+							)}
+							<div className="w-40 md:block z-20">
+								<ConnectButton>Connect Wallet</ConnectButton>
+							</div>
+						</div>
 					</div>
 
 				</div>
@@ -161,7 +171,16 @@ const Navbar = () => {
 						<MdOutlineAccountBalanceWallet className="mr-2" /> Wallet
 					</div>
 					<div className="py-2">
-						<ConnectButton />
+						<div className="flex items-center gap-4">
+							{connected && (
+								<span className="text-sm text-white">
+									{address?.slice(0, 6)}...{address?.slice(-4)}
+								</span>
+							)}
+							<div className="w-40 md:block z-20">
+								<ConnectButton>Connect Wallet</ConnectButton>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

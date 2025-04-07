@@ -2,7 +2,7 @@ import { generateNonce, SiweMessage } from 'siwe';
 // import { prisma } from './prisma';
 import jwt from 'jsonwebtoken';
 
-export async function createAuthMessage(address: string, chainId: number) {
+export async function createAuthMessage(address: string, chainId: string) {
     const nonce = generateNonce();
     const message = new SiweMessage({
         domain: window.location.host,
@@ -10,7 +10,7 @@ export async function createAuthMessage(address: string, chainId: number) {
         statement: 'Sign in to Core Realm',
         uri: window.location.origin,
         version: '1',
-        chainId,
+        chainId: Number(chainId),
         nonce
     });
 

@@ -1,10 +1,11 @@
 // hooks/useAuth.ts
 import { useWallet } from '@suiet/wallet-kit';
+import { Transaction } from "@mysten/sui/transactions";
 import { useCallback, useEffect, useState, useRef } from 'react';
 import { createAuthMessage } from '@/lib/auth';
 
 export function useAuth() {
-    const { address, connected } = useWallet();
+    const { address, connected, chain, disconnect, signPersonalMessage } = useWallet();
 
     const [isLoading, setIsLoading] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -202,9 +203,11 @@ export function useAuth() {
 
             // Generate message
             const message = await createAuthMessage(address, chain.id);
+            const msgBytes = new TextEncoder().encode(message)
+
 
             // Request signature
-            // const signature = await signMessageAsync({ message });
+            const signature = await signPersonalMessage({ message: msgBytes });
 
             // Verify on server
             const response = await fetch('/api/auth/login', {
