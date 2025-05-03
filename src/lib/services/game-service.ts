@@ -2,13 +2,15 @@
 
 import { toast } from "sonner"
 
+
 interface GamePaymentParams {
     gameId: string
     txHash: string
     amount: number
     address: string
+    userId: string // <-- add this line
+    timestamp: Date
 }
-
 interface GamePlayParams {
     gameSlug: string
     duration?: number

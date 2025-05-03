@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { useAccount, useBalance } from "wagmi"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -15,6 +14,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { useAuth } from "@/hooks/useAuth"
 import { GameScoreCard } from "@/components/profile/GameScoreCard"
 import { contractAddresses } from "@/lib/contracts"
+import { useWallet, useAccountBalance, useCoinBalance } from "@suiet/wallet-kit"
 
 // Token contract address
 const TOKEN_CONTRACT_ADDRESS = contractAddresses.tokenMint as `0x${string}`
@@ -61,7 +61,7 @@ interface GameActivity {
 }
 
 export default function ProfilePage() {
-    const { address, isConnected } = useAccount()
+    const { address, connected, disconnect } = useWallet()
     const { isAuthenticated, isLoading: isAuthLoading, login } = useAuth()
 
     const [profile, setProfile] = useState<UserProfile | null>(null)
@@ -69,22 +69,27 @@ export default function ProfilePage() {
     const [gameStats, setGameStats] = useState<GameStat[]>([])
     const [isLoading, setIsLoading] = useState(true)
 
+    const { error, loading, balance } = useAccountBalance();
+
     // Get REALM token balance
-    const { data: tokenBalance, isLoading: isBalanceLoading } = useBalance({
-        address,
-        token: TOKEN_CONTRACT_ADDRESS as `0x${string}`,
+    const { data: tokenBalance, isLoading: isBalanceLoading } = useCoinBalance({
+        address: address as `0x${string}` | undefined,
+        typeArg: '0x1::sui::SUI',
+        chainId: '0x1'
     })
+
+    console.log("tokenBalance", tokenBalance)
 
     // Handle wallet authentication
     useEffect(() => {
-        if (isConnected && address && isAuthenticated) {
+        if (connected && address && isAuthenticated) {
             fetchProfileData()
         }
-    }, [isConnected, address, isAuthenticated])
+    }, [connected, address, isAuthenticated])
 
     // Define fetchProfileData as a useCallback to avoid dependency issues
     const fetchProfileData = useCallback(async () => {
-        if (!isConnected || !address) return
+        if (!connected || !address) return
 
         try {
             setIsLoading(true)
@@ -117,7 +122,7 @@ export default function ProfilePage() {
         } finally {
             setIsLoading(false)
         }
-    }, [address, isConnected])
+    }, [address, connected])
 
     const gamesPlayedCount = transactions.filter(tx => tx.type === "GAME_PAYMENT").length;
 
@@ -141,7 +146,7 @@ export default function ProfilePage() {
         )
     }
 
-    if (!isConnected) {
+    if (!connected) {
         return (
             <div className="container mx-auto py-10 px-4">
                 <div className="flex flex-col items-center justify-center min-h-[60vh]">
@@ -153,7 +158,7 @@ export default function ProfilePage() {
         )
     }
 
-    if (isConnected && !isAuthenticated) {
+    if (connected && !isAuthenticated) {
         return (
             <div className="container mx-auto py-10 px-4">
                 <div className="flex flex-col items-center justify-center min-h-[60vh]">
@@ -206,7 +211,7 @@ export default function ProfilePage() {
                                         ) : (
                                             <div className="flex items-center">
                                                 <span className="text-xl font-bold text-[#98ee2c]">
-                                                    {tokenBalance ? parseFloat(tokenBalance.formatted).toFixed(2) : "0.00"}
+                                                    {tokenBalance ? parseFloat(tokenBalance.toString()).toFixed(2) : "0.00"}
                                                 </span>
                                                 <span className="ml-2 text-gray-400">REALM</span>
                                             </div>

@@ -68,7 +68,7 @@ export default function NFTProfilePage() {
 
     // Mock implementation for getting profile data
     const [existingProfile, setExistingProfile] = useState<any>(null);
-    
+
     // This would be replaced with actual Sui contract call
     useEffect(() => {
         if (tokenId) {
@@ -127,11 +127,11 @@ export default function NFTProfilePage() {
             }
 
             setIsPending(true);
-            
+
             try {
                 // Create a new transaction block
                 const txb = new Transaction();
-                
+
                 // Call the module function - this is an example, adjust to your contract
                 txb.moveCall({
                     target: `${contractAddresses.nft}::profile::create_profile`,
@@ -143,16 +143,16 @@ export default function NFTProfilePage() {
                         // Add any other arguments your contract needs
                     ],
                 });
-                
+
                 // Sign and execute the transaction
                 const result = await signAndExecuteTransactionBlock({
-                    transactionBlock: txb,
+                    transactionBlock: txb as any,
                 });
-                
+
                 setTxHash(result.digest);
                 setIsConfirming(true);
                 setIsPending(false);
-                
+
                 // For demo purposes, we'll just set it as confirmed after a delay
                 setTimeout(() => {
                     setIsConfirming(false);
@@ -197,11 +197,11 @@ export default function NFTProfilePage() {
             }
 
             setIsPending(true);
-            
+
             try {
                 // Create a new transaction block
                 const txb = new Transaction();
-                
+
                 // Call the module function - this is an example, adjust to your contract
                 txb.moveCall({
                     target: `${contractAddresses.nft}::profile::update_profile`,
@@ -213,16 +213,16 @@ export default function NFTProfilePage() {
                         // Add any other arguments your contract needs
                     ],
                 });
-                
+
                 // Sign and execute the transaction
                 const result = await signAndExecuteTransactionBlock({
-                    transactionBlock: txb,
+                    transactionBlock: txb as any,
                 });
-                
+
                 setTxHash(result.digest);
                 setIsConfirming(true);
                 setIsPending(false);
-                
+
                 // For demo purposes, we'll just set it as confirmed after a delay
                 setTimeout(() => {
                     setIsConfirming(false);
@@ -267,11 +267,11 @@ export default function NFTProfilePage() {
             }
 
             setIsPending(true);
-            
+
             try {
                 // Create a new transaction block
                 const txb = new Transaction();
-                
+
                 // Call the module function - this is an example, adjust to your contract
                 txb.moveCall({
                     target: `${contractAddresses.nft}::profile::update_profile_image`,
@@ -281,16 +281,16 @@ export default function NFTProfilePage() {
                         // Add any other arguments your contract needs
                     ],
                 });
-                
+
                 // Sign and execute the transaction
                 const result = await signAndExecuteTransactionBlock({
-                    transactionBlock: txb,
+                    transactionBlock: txb as any,
                 });
-                
+
                 setTxHash(result.digest);
                 setIsConfirming(true);
                 setIsPending(false);
-                
+
                 // For demo purposes, we'll just set it as confirmed after a delay
                 setTimeout(() => {
                     setIsConfirming(false);

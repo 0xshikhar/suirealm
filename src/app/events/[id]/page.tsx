@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { BsArrowLeft } from "react-icons/bs";
 import { BiChat, BiHeart, BiShare } from "react-icons/bi";
-import { useAccount } from "wagmi";
+import { useWallet } from "@suiet/wallet-kit";
 // Message type definition
 interface ChatMessage {
     id: string;
@@ -52,7 +52,7 @@ const events = [
 ];
 
 export default function EventPage({ params }: { params: { id: string } }) {
-    const { address } = useAccount();
+    const { address, connected } = useWallet();
     const event = events.find(e => e.id === params.id);
     const [message, setMessage] = useState("");
     const [messages, setMessages] = useState<ChatMessage[]>([]);

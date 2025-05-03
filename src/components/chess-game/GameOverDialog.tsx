@@ -11,15 +11,10 @@ import { Button } from '@/components/ui';
 import { Trophy, Handshake, Award, Loader2 } from 'lucide-react';
 import { Chessboard } from 'react-chessboard';
 import { chessWinnerABI } from '../../../contract/abi/ChessWinnerABI';
-import { chessWinnerNFT } from '@/lib/contracts';
+// import { chessWinnerNFT } from '@/lib/contracts';
 import { GameStatus, PieceColor } from './ChessTypes';
 import { GameSettings } from './GameFunctions';
-import {
-    useAccount,
-    useWriteContract,
-    useWaitForTransactionReceipt
-} from "wagmi";
-import { ethers } from 'ethers';
+
 
 // Define interface for component props
 interface GameOverDialogProps {
@@ -36,7 +31,7 @@ interface GameOverDialogProps {
     moveCount: number; // Number of moves in the game
 }
 
-const NFT_CONTRACT_ADDRESS = chessWinnerNFT;
+// const NFT_CONTRACT_ADDRESS = chessWinnerNFT;
 
 const GameOverDialog: React.FC<GameOverDialogProps> = ({
     showGameOverModal,
@@ -53,122 +48,113 @@ const GameOverDialog: React.FC<GameOverDialogProps> = ({
 }) => {
     const [mintingStatus, setMintingStatus] = useState('idle'); // 'idle', 'minting', 'success', 'error'
     const [txHash, setTxHash] = useState('');
-
-    // Get account information using wagmi hook
-    const { address } = useAccount();
-
     const isWinner = gameStatus.winner && gameStatus.winner === playerColor;
 
-    // Use wagmi's useWriteContract hook to mint the NFT
-    const { writeContract, isPending: isMinting, error: writeError } = useWriteContract();
-
-    // Use wagmi's useWaitForTransactionReceipt hook to wait for transaction confirmation
-    const {
-        data: receipt,
-        isSuccess: isConfirmed,
-        isError: isReceiptError
-    } = useWaitForTransactionReceipt({
-        hash: txHash as `0x${string}`,
-    });
+    // const { writeContract, isPending: isMinting, error: writeError } = useWriteContract();
+    // const {
+    //     data: receipt,
+    //     isSuccess: isConfirmed,
+    //     isError: isReceiptError
+    // } = useWaitForTransactionReceipt({
+    //     hash: txHash as `0x${string}`,
+    // });
 
     // Function to mint the NFT
-    const mintWinnerNFT = async () => {
-        if (!address) {
-            alert("Please connect your wallet to mint NFTs!");
-            return;
-        }
+    // const mintWinnerNFT = async () => {
+    //     if (!address) {
+    //         alert("Please connect your wallet to mint NFTs!");
+    //         return;
+    //     }
 
-        try {
-            setMintingStatus('minting');
+    //     try {
+    //         setMintingStatus('minting');
 
-            console.log("Moves:", moves);
-            console.log("Moves hex:", `0x${Buffer.from(moves).toString('hex')}`);
+    //         console.log("Moves:", moves);
+    //         console.log("Moves hex:", `0x${Buffer.from(moves).toString('hex')}`);
 
-            const encodedMoves = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(moves));
-            console.log("Encoded moves:", encodedMoves);
+    //         // const encodedMoves = ethers.utils.hexlify(ethers.utils.toUtf8Bytes(moves));
+    //         // console.log("Encoded moves:", encodedMoves);
+    //         // let paddedEncodedMoves = encodedMoves;
 
-            // Ensure encodedMoves is exactly 20 bytes (40 hex characters)
-            let paddedEncodedMoves = encodedMoves;
+    //         // Check the length of the encoded moves
+    //         // if (paddedEncodedMoves.length < 42) { // 42 because '0x' prefix is included
+    //         //     // Pad with zeros to the right if less than 20 bytes
+    //         //     paddedEncodedMoves = paddedEncodedMoves.padEnd(42, '0');
+    //         // } else if (paddedEncodedMoves.length > 42) {
+    //         //     // Truncate to 20 bytes if more than 20 bytes
+    //         //     paddedEncodedMoves = paddedEncodedMoves.slice(0, 42);
+    //         // }
 
-            // Check the length of the encoded moves
-            if (paddedEncodedMoves.length < 42) { // 42 because '0x' prefix is included
-                // Pad with zeros to the right if less than 20 bytes
-                paddedEncodedMoves = paddedEncodedMoves.padEnd(42, '0');
-            } else if (paddedEncodedMoves.length > 42) {
-                // Truncate to 20 bytes if more than 20 bytes
-                paddedEncodedMoves = paddedEncodedMoves.slice(0, 42);
-            }
+    //         // console.log("Padded/Truncated encoded moves:", paddedEncodedMoves);
 
-            console.log("Padded/Truncated encoded moves:", paddedEncodedMoves);
+    //         // Determine win type from result text
+    //         let winType = "checkmate";
+    //         if (result.includes("resign")) {
+    //             winType = "resignation";
+    //         } else if (result.includes("time")) {
+    //             winType = "timeout";
+    //         }
 
-            // Determine win type from result text
-            let winType = "checkmate";
-            if (result.includes("resign")) {
-                winType = "resignation";
-            } else if (result.includes("time")) {
-                winType = "timeout";
-            }
+    //         console.log("Minting NFT with parameters:", {
+    //             winner: address,
+    //             fen,
+    //             moves: moves.substring(0, 30) + "...", // Log truncated moves for readability
+    //             opponent,
+    //             isWhite: playerColor === 'w',
+    //             moveCount,
+    //             winType
+    //         });
 
-            console.log("Minting NFT with parameters:", {
-                winner: address,
-                fen,
-                moves: moves.substring(0, 30) + "...", // Log truncated moves for readability
-                opponent,
-                isWhite: playerColor === 'w',
-                moveCount,
-                winType
-            });
-
-            const someSecretOrNonce = ethers.utils.hexlify(ethers.utils.randomBytes(32)); // Generate a random 32-byte nonce
+    //         // const someSecretOrNonce = ethers.utils.hexlify(ethers.utils.randomBytes(32)); // Generate a random 32-byte nonce
 
 
-            const gameSignature = ethers.utils.keccak256(
-                ethers.utils.solidityPack(
-                    ['address', 'string', 'bytes32'],
-                    [address, fen, someSecretOrNonce] // This is simplified - implement proper signature mechanism
-                )
-            );
+    //         // const gameSignature = ethers.utils.keccak256(
+    //         //     ethers.utils.solidityPack(
+    //         //         ['address', 'string', 'bytes32'],
+    //         //         [address, fen, someSecretOrNonce] // This is simplified - implement proper signature mechanism
+    //         //     )
+    //         // );
 
-            // Call mintWinnerNFT function using wagmi's writeContract
-            writeContract({
-                address: NFT_CONTRACT_ADDRESS,
-                abi: chessWinnerABI,
-                functionName: 'mintWinnerNFT',
-                args: [
-                    fen,                // finalFen (string)
-                    paddedEncodedMoves, // moves (string) - ensure this is a string, not bytes
-                    opponent,           // loser address
-                    playerColor === 'w', // wasWhite (boolean)
-                    moveCount,          // moveCount (uint256)
-                    winType,            // winType (string)
-                    gameSignature       // gameSignature (bytes32)
-                ],
-            }, {
-                onSuccess(data) {
-                    console.log("Transaction sent:", data);
-                    setTxHash(data);
-                },
-                onError(error) {
-                    console.error("Error minting NFT:", error);
-                    setMintingStatus('error');
-                }
-            });
-        } catch (error) {
-            console.error("Error minting NFT:", error);
-            setMintingStatus('error');
-        }
-    };
+    //         // Call mintWinnerNFT function using wagmi's writeContract
+    //         // writeContract({
+    //         //     address: NFT_CONTRACT_ADDRESS,
+    //         //     abi: chessWinnerABI,
+    //         //     functionName: 'mintWinnerNFT',
+    //         //     args: [
+    //         //         fen,                // finalFen (string)
+    //         //         paddedEncodedMoves, // moves (string) - ensure this is a string, not bytes
+    //         //         opponent,           // loser address
+    //         //         playerColor === 'w', // wasWhite (boolean)
+    //         //         moveCount,          // moveCount (uint256)
+    //         //         winType,            // winType (string)
+    //         //         gameSignature       // gameSignature (bytes32)
+    //         //     ],
+    //         // }, {
+    //         //     onSuccess(data) {
+    //         //         console.log("Transaction sent:", data);
+    //         //         setTxHash(data);
+    //         //     },
+    //         //     onError(error) {
+    //         //         console.error("Error minting NFT:", error);
+    //         //         setMintingStatus('error');
+    //         //     }
+    //         // });
+    //     } catch (error) {
+    //         console.error("Error minting NFT:", error);
+    //         setMintingStatus('error');
+    //     }
+    // };
 
     // Update status based on transaction receipt
-    React.useEffect(() => {
-        if (isConfirmed && receipt) {
-            console.log("Transaction confirmed:", receipt);
-            setMintingStatus('success');
-        } else if (isReceiptError) {
-            console.error("Transaction failed");
-            setMintingStatus('error');
-        }
-    }, [isConfirmed, isReceiptError, receipt]);
+    // React.useEffect(() => {
+    //     if (isConfirmed && receipt) {
+    //         console.log("Transaction confirmed:", receipt);
+    //         setMintingStatus('success');
+    //     } else if (isReceiptError) {
+    //         console.error("Transaction failed");
+    //         setMintingStatus('error');
+    //     }
+    // }, [isConfirmed, isReceiptError, receipt]);
 
     return (
         <Dialog
@@ -257,23 +243,27 @@ const GameOverDialog: React.FC<GameOverDialogProps> = ({
 
                     {/* Only show mint button if player won and hasn't already minted */}
                     {isWinner && mintingStatus !== 'success' && (
-                        <Button
-                            onClick={mintWinnerNFT}
-                            disabled={isMinting}
-                            className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 text-white"
-                        >
-                            {isMinting ? (
-                                <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Minting...
-                                </>
-                            ) : (
-                                <>
-                                    <Trophy className="mr-2 h-4 w-4" />
-                                    Mint Winner NFT
-                                </>
-                            )}
-                        </Button>
+                        // show winner message
+                        <p className="text-center text-lg font-bold text-green-600">
+                            You have won the game!
+                        </p>
+                        // <Button
+                        //     onClick={mintWinnerNFT}
+                        //     disabled={isMinting}
+                        //     className="bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-600 hover:to-amber-600 text-white"
+                        // >
+                        //     {isMinting ? (
+                        //         <>
+                        //             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        //             Minting...
+                        //         </>
+                        //     ) : (
+                        //         <>
+                        //             <Trophy className="mr-2 h-4 w-4" />
+                        //             Mint Winner NFT
+                        //         </>
+                        //     )}
+                        // </Button>
                     )}
                 </div>
             </DialogContent>

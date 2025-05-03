@@ -36,13 +36,13 @@ function TokenMint() {
     const [remainingAllowance, setRemainingAllowance] = useState<number>(10);
     const [tokenSymbol, setTokenSymbol] = useState<string>("GAME");
     const [tokenName, setTokenName] = useState<string>("Game Token");
-    
+
     // Track transaction state manually
     const [txHash, setTxHash] = useState<string | null>(null);
     const [isPending, setIsPending] = useState(false);
     const [isConfirming, setIsConfirming] = useState(false);
     const [isConfirmed, setIsConfirmed] = useState(false);
-    
+
     // In a real implementation, you would fetch these from your Sui contract
     useEffect(() => {
         if (address) {
@@ -54,7 +54,7 @@ function TokenMint() {
 
     // Handle disabled states
     const isDisabled = !isConnected || isPending || isConfirming || remainingAllowance <= 0;
-    
+
     useEffect(() => {
         console.log("State:", {
             isConnected,
@@ -87,13 +87,13 @@ function TokenMint() {
             //     setError("Please sign in with your wallet first");
             //     return;
             // }
-            
+
             setIsPending(true);
-            
+
             try {
                 // Create a new transaction block
                 const txb = new Transaction();
-                
+
                 // Call the module function - this is an example, adjust to your contract
                 txb.moveCall({
                     target: `${contractAddresses.tokenMint}::token::mint`,
@@ -102,23 +102,23 @@ function TokenMint() {
                         // Add any other arguments your contract needs
                     ],
                 });
-                
+
                 // Sign and execute the transaction
                 const result = await signAndExecuteTransactionBlock({
-                    transactionBlock: txb,
+                    transactionBlock: txb as any,
                 });
-                
+
                 setTxHash(result.digest);
                 setIsConfirming(true);
                 setIsPending(false);
-                
+
                 // For demo purposes, we'll just set it as confirmed after a delay
                 setTimeout(() => {
                     setIsConfirming(false);
                     setIsConfirmed(true);
                     setIsSuccess(true);
                     resetStates();
-                    
+
                     // Update the remaining allowance
                     setRemainingAllowance(prev => Math.max(0, prev - amount));
                 }, 2000);

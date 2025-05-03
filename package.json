@@ -17,7 +17,7 @@
     "@livepeer/react": "^4.2.10",
     "@mysten/dapp-kit": "^0.14.49",
     "@mysten/enoki": "^0.4.24",
-    "@mysten/sui": "1.1.0",
+    "@mysten/sui": "1.21.2",
     "@mysten/wallet-standard": "^0.13.23",
     "@prisma/extension-accelerate": "^1.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.6",
