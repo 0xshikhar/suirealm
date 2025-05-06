@@ -248,7 +248,7 @@ const Tile: React.FC<{
     const getBackgroundColor = () => {
         switch (state) {
             case 'correct':
-                return 'bg-green-500 dark:bg-green-600 text-white border-green-500 dark:border-green-600';
+                return 'bg-[#98ee2c] dark:bg-green-600 text-white border-green-500 dark:border-green-600';
             case 'present':
                 return 'bg-yellow-500 dark:bg-yellow-600 text-white border-yellow-500 dark:border-yellow-600';
             case 'absent':
@@ -333,7 +333,7 @@ const Keyboard: React.FC = () => {
         const state = gameState.letterStates[key];
         switch (state) {
             case 'correct':
-                return 'bg-green-500 dark:bg-green-600 text-white';
+                return 'bg-[#98ee2c] dark:bg-green-600 text-white';
             case 'present':
                 return 'bg-yellow-500 dark:bg-yellow-600 text-white';
             case 'absent':

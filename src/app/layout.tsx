@@ -6,7 +6,7 @@ import { siteConfig } from "@/config/site"
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
 import Providers from "@/app/providers"
-import Navbar from "@/components/navigation/navbar"
+import ConditionalNavigation from "@/components/navigation/conditional-navigation"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -64,6 +64,8 @@ export const viewport: Viewport = {
   ],
 }
 
+
+
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -81,19 +83,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
           disableTransitionOnChange
         >
           <Providers>
-            <div
-              className="flex flex-col min-h-screen w-full"
-              style={{
-                backgroundImage: "url('/images/background.png')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
-              <Navbar />
-              <main className="flex-1 relative z-10">
-                {children}
-              </main>
-            </div>
+            <ConditionalNavigation>
+              {children}
+            </ConditionalNavigation>
           </Providers>
         </ThemeProvider>
       </body>

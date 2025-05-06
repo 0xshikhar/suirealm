@@ -24,7 +24,7 @@ interface GamePaymentModalProps {
 const TOKEN_CONTRACT_ADDRESS = contractAddresses.tokenMint
 
 // Platform wallet that receives the fees (replace with your actual platform wallet address)
-const PLATFORM_WALLET_ADDRESS = "0x0987654321fedcba0987654321fedcba0987654321fedcba0987654321fedcba"
+const PLATFORM_WALLET_ADDRESS = "0x743ba849228f8ad8c6979395527c553d7e8840ca525ba1b065a8f2522c8673a9"
 
 // Fixed game fee in SUI tokens
 const GAME_FEE = 0.01 // 0.01 SUI tokens
@@ -40,8 +40,10 @@ export function GamePaymentModal({ isOpen, onClose, gamePath, gameName }: GamePa
 
     const gameId = gamePath.split('/').pop() || ""
 
-    // Initialize Sui client
-    const client = new SuiClient({ url: getFullnodeUrl('testnet') })
+    // Get the current network and initialize Sui client
+    // We'll explicitly set this to devnet for consistency
+    const network = 'devnet'
+    const client = new SuiClient({ url: getFullnodeUrl(network) })
 
     const handlePayment = async () => {
         if (!address || !signAndExecuteTransactionBlock) {
@@ -53,63 +55,85 @@ export function GamePaymentModal({ isOpen, onClose, gamePath, gameName }: GamePa
         setError(null)
         setTxHash(null)
 
+        // Check wallet balance before proceeding
         try {
-            // Create transaction block - ensure we're using the correct Transaction class
+            // Initialize Sui client with the same network as above
+            const suiClient = new SuiClient({ url: getFullnodeUrl(network) })
+
+            // Get all coins owned by the address to check gas availability
+            const { data: coins } = await suiClient.getCoins({
+                owner: address,
+            })
+
+            // Check if there are any coins available for gas
+            if (!coins || coins.length === 0) {
+                setError(`Your wallet has no SUI tokens for gas fees on ${network}. Please get tokens from the faucet.`)
+                console.log(`No coins found for address ${address} on ${network}`)
+                setIsProcessing(false)
+                return
+            }
+
+            console.log(`Found ${coins.length} coins for address ${address} on ${network}:`, coins)
+
+            // Check if total balance is too low (less than 0.02 SUI)
+            const totalBalance = coins.reduce((sum, coin) => sum + BigInt(coin.balance), BigInt(0))
+            if (totalBalance < 20000000) { // 0.02 SUI in MIST
+                setError("Your wallet balance is too low for gas fees. Please get more devnet tokens from the faucet.")
+                setIsProcessing(false)
+                return
+            }
+        } catch (balanceError) {
+            console.error('Error checking balance:', balanceError)
+            // Continue with the transaction attempt anyway
+        }
+
+        try {
+            // Create a simplified transaction with explicit type definitions
             const txb = new Transaction()
 
-            // Set sender
+            // Set sender explicitly
             txb.setSender(address)
+
+            // Use an even smaller gas budget to minimize requirements
+            txb.setGasBudget(1000000) // 0.001 SUI for gas
 
             // Convert SUI amount to MIST (1 SUI = 1,000,000,000 MIST)
             const amountInMist = Math.floor(GAME_FEE * Number(MIST_PER_SUI))
 
-            // Method 1: Transfer SUI coins to platform wallet
+            // Alternative payment approach that might work better with devnet
+            // Use SUI coin type explicitly
             const [coin] = txb.splitCoins(txb.gas, [amountInMist])
             txb.transferObjects([coin], PLATFORM_WALLET_ADDRESS)
 
-            // Method 2: Call a move function on your token contract (uncomment if needed)
-            /*
-            txb.moveCall({
-                target: `${TOKEN_CONTRACT_ADDRESS}::game_payment::pay_game_fee`,
-                arguments: [
-                    txb.pure.string(gameId),
-                    txb.pure.u64(amountInMist),
-                    txb.pure.address(PLATFORM_WALLET_ADDRESS)
-                ],
+            console.log('Attempting devnet transaction with:', {
+                network,
+                sender: address,
+                recipient: PLATFORM_WALLET_ADDRESS,
+                amountInMist,
+                gameId,
+                gasBudget: 1000000
             })
-            */
 
-            // Method 3: Transfer custom tokens (if using your own token contract)
-            /*
-            txb.moveCall({
-                target: `${TOKEN_CONTRACT_ADDRESS}::token::transfer`,
-                arguments: [
-                    txb.object('COIN_OBJECT_ID'), // Replace with actual coin object ID
-                    txb.pure.address(PLATFORM_WALLET_ADDRESS),
-                    txb.pure.u64(amountInMist)
-                ],
-                typeArguments: [`${TOKEN_CONTRACT_ADDRESS}::token::TOKEN`] // Replace with your token type
-            })
-            */
-
-            // Set gas budget and price
-            txb.setGasBudget(10000000) // 0.01 SUI for gas
-
-            // Sign and execute transaction
-            // Use type assertion to tell TypeScript that our Transaction is compatible
+            // Sign and execute with absolutely minimal options
+            // Use 'as any' to bypass type checking between different versions of Transaction
             const result = await signAndExecuteTransactionBlock({
                 transactionBlock: txb as any,
                 options: {
                     showEffects: true,
-                    showEvents: true,
-                    showObjectChanges: true,
-                    showBalanceChanges: true,
                 },
             })
 
             console.log('Transaction result:', result)
 
-            if (result.effects?.status?.status === 'success') {
+            // Check transaction success in a more robust way
+            // The transaction is successful if we have a digest and the transaction was executed
+            const isSuccessful = !!result.digest &&
+                // Either check status directly if available
+                (result.effects?.status?.status === 'success' ||
+                    // Or consider it successful if we don't have an explicit error
+                    (result.effects && !result.effects.status?.error))
+
+            if (isSuccessful) {
                 setTxHash(result.digest)
                 setIsSuccess(true)
 
@@ -252,7 +276,7 @@ export function GamePaymentModal({ isOpen, onClose, gamePath, gameName }: GamePa
                         <div className="bg-[#2a2a2a] p-3 rounded-md">
                             <p className="text-sm text-gray-400 mb-1">Transaction Hash:</p>
                             <a
-                                href={`https://explorer.sui.io/txblock/${txHash}?network=testnet`}
+                                href={`https://explorer.sui.io/txblock/${txHash}?network=devnet`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-xs font-mono text-blue-400 hover:text-blue-300 break-all"

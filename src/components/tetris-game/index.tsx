@@ -52,7 +52,7 @@ export const TETROMINOS = {
             [1, 1, 0],
             [0, 0, 0],
         ],
-        color: "bg-green-500 border-green-600",
+        color: "bg-[#98ee2c] border-green-600",
     },
     T: {
         shape: [
@@ -599,7 +599,7 @@ const TetrisGame = () => {
                 </CardContent>
 
                 <CardFooter className="flex justify-between pt-0">
-                    {/* <div className="text-xs text-muted-foreground">CoreDAO Platform</div> */}
+                    {/* <div className="text-xs text-muted-foreground">Sui Platform</div> */}
                     <div className="text-xs text-black font-bold">v1.0</div>
                 </CardFooter>
             </Card>

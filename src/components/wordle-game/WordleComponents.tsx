@@ -7,7 +7,7 @@ import { LetterState } from './WordleTypes';
 export const BoardTile: React.FC<{ letter: string; state: LetterState }> = ({ letter, state }) => {
     const getBackgroundColor = () => {
         switch (state) {
-            case 'correct': return 'bg-green-500 dark:bg-green-600';
+            case 'correct': return 'bg-[#98ee2c] dark:bg-green-600';
             case 'present': return 'bg-yellow-500 dark:bg-yellow-600';
             case 'absent': return 'bg-gray-400 dark:bg-gray-600';
             default: return 'bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-700';
@@ -87,7 +87,7 @@ export const Keyboard: React.FC = () => {
     const getKeyBackground = (key: string) => {
         const state = getKeyState(key);
         switch (state) {
-            case 'correct': return 'bg-green-500 hover:bg-green-600 text-white';
+            case 'correct': return 'bg-[#98ee2c] hover:bg-green-600 text-white';
             case 'present': return 'bg-yellow-500 hover:bg-yellow-600 text-white';
             case 'absent': return 'bg-gray-400 hover:bg-gray-500 text-white dark:bg-gray-600 dark:hover:bg-gray-700';
             default: return 'bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200';
@@ -161,7 +161,7 @@ export const StatsDisplay: React.FC = () => {
                             <div className="text-sm w-3">{index + 1}</div>
                             <div className="flex-1 h-6 md:h-8 bg-gray-200 dark:bg-gray-700 rounded overflow-hidden">
                                 <div
-                                    className="h-full bg-green-500 dark:bg-green-600 px-2 flex items-center justify-end text-white text-xs md:text-sm font-bold"
+                                    className="h-full bg-[#98ee2c] dark:bg-green-600 px-2 flex items-center justify-end text-white text-xs md:text-sm font-bold"
                                     style={{ width: `${percentage}%` }}
                                 >
                                     {count > 0 ? count : ''}
@@ -174,7 +174,7 @@ export const StatsDisplay: React.FC = () => {
 
             <button
                 onClick={resetGame}
-                className="w-full py-2 md:py-3 bg-green-500 hover:bg-green-600 text-white rounded-md font-bold transition-colors"
+                className="w-full py-2 md:py-3 bg-[#98ee2c] hover:bg-green-600 text-white rounded-md font-bold transition-colors"
             >
                 New Game
             </button>
@@ -236,7 +236,7 @@ export const SettingsComponent: React.FC = () => {
                 <span className="font-medium">Dark Mode</span>
                 <button
                     onClick={toggleDarkMode}
-                    className={`w-12 h-6 rounded-full transition-colors p-1 ${isDarkMode ? 'bg-green-500' : 'bg-gray-300'
+                    className={`w-12 h-6 rounded-full transition-colors p-1 ${isDarkMode ? 'bg-[#98ee2c]' : 'bg-gray-300'
                         }`}
                 >
                     <div

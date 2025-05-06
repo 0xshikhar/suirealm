@@ -3,7 +3,7 @@ import { SiteConfig } from "@/types"
 import { env } from "@/env.mjs"
 
 export const siteConfig: SiteConfig = {
-  name: "Suirealm",
+  name: "SuiRealm",
   author: "0xShikhar",
   description:
     "Next.js 14+ starter template with app router, wagmi, rainbowkit, prisma, shadcn/ui, typesafe env, icons and configs setup.",

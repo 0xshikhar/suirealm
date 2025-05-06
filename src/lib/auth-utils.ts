@@ -64,5 +64,5 @@ export function getSession(sessionId: string): string | null {
  * @returns A formatted message string
  */
 export function createSignMessage(address: string, nonce: string): string {
-    return `Sign this message to authenticate with Suirealm.\n\nAddress: ${address}\nNonce: ${nonce}\nTimestamp: ${Date.now()}`
+    return `Sign this message to authenticate with SuiRealm.\n\nAddress: ${address}\nNonce: ${nonce}\nTimestamp: ${Date.now()}`
 } 

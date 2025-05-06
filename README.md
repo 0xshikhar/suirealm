@@ -1,8 +1,8 @@
-# Suirealm
+# SuiRealm
 
 ## 1. Project Overview
 
-Suirealm is a platform that allows gamers to Play, Earn, Organize & Stream Games on the Sui blockchain. Our vision is to create an immersive, impartial, and inclusive ecosystem for web3 gamers worldwide. The platform enables game developers to manage their communities, livestream gameplay, and offer playable games directly to users through blockchain integration. Built with Next.js, Prisma database management, and smart contract functionality, Suirealm bridges traditional gaming experiences with Web3 capabilities to create a player-centric gaming environment.
+SuiRealm is a platform that allows gamers to Play, Earn, Organize & Stream Games on the Sui blockchain. Our vision is to create an immersive, impartial, and inclusive ecosystem for web3 gamers worldwide. The platform enables game developers to manage their communities, livestream gameplay, and offer playable games directly to users through blockchain integration. Built with Next.js, Prisma database management, and smart contract functionality, SuiRealm bridges traditional gaming experiences with Web3 capabilities to create a player-centric gaming environment.
 
 ## 2. Market Need
 
@@ -16,7 +16,7 @@ Suirealm is a platform that allows gamers to Play, Earn, Organize & Stream Games
 
 ## 3. Solution
 
-Suirealm addresses these challenges by providing:
+SuiRealm addresses these challenges by providing:
 
 - **Interactive Gaming Platform**: Engaging platform for gamers built on the Sui blockchain
 - **Fair Streaming Economics**: Elimination of high commissions with improved transparency for content creators
@@ -27,7 +27,7 @@ Suirealm addresses these challenges by providing:
 
 ## 4. Current Game Portfolio
 
-Suirealm has already developed 7 puzzle-based onchain games:
+SuiRealm has already developed 7 puzzle-based onchain games:
 
 1. **Chess**: Strategic board game with NFT integration
 2. **Sudoku**: Number-based puzzle with play-to-earn mechanics
@@ -116,4 +116,4 @@ Suirealm has already developed 7 puzzle-based onchain games:
 
 ![Profile Page](https://decenlabs.com/wp-content/uploads/2025/03/7.png)
 
-Suirealm represents a paradigm shift in how games are developed, played, and monetized. By creating a fair, transparent ecosystem built on the Sui blockchain, we're empowering creators, engaging players, and building a sustainable Web3 gaming platform where all participants benefit from their contributions.
+SuiRealm represents a paradigm shift in how games are developed, played, and monetized. By creating a fair, transparent ecosystem built on the Sui blockchain, we're empowering creators, engaging players, and building a sustainable Web3 gaming platform where all participants benefit from their contributions.

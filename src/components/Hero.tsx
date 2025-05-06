@@ -43,12 +43,12 @@ const Hero = () => {
                     <div className="flex items-center mb-4">
                         <div className="text-white text-3xl font-Outfit">Introducing</div>
                         <div className="px-2 text-[#98ee2c] font-bold text-3xl font-serif">
-                            Suirealm
+                            SuiRealm
                         </div>
                     </div>
 
                     <h1 className="text-white text-[80px] font-Agda mb-[2.5rem]">
-                        Play, Organize & Stream Games on CoreDao Blockchain
+                        Play, Organize & Stream Games on Sui Blockchain
                     </h1>
 
                     <div className="flex space-x-5">
