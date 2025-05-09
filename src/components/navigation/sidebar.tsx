@@ -4,14 +4,14 @@ import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
-import { User, Home, Layout, Gamepad2, Calendar, Zap, Trophy, Settings } from "lucide-react";
+import { User, Home, Layout, Gamepad2, Calendar, Zap, Trophy, Settings, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ConnectButton, useWallet } from '@suiet/wallet-kit'
 
 const Sidebar = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const { address, connected } = useWallet();
+  const { address, connected, disconnect } = useWallet();
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -39,6 +39,7 @@ const Sidebar = () => {
     { name: "Home", icon: <Home size={20} />, path: "/" },
     { name: "Dashboard", icon: <Layout size={20} />, path: "/dashboard" },
     { name: "Games", icon: <Gamepad2 size={20} />, path: "/games" },
+    { name: "AI Tools", icon: <Sparkles size={20} />, path: "/ai-tools" },
     { name: "Events", icon: <Calendar size={20} />, path: "/events" },
     { name: "Tournaments", icon: <Trophy size={20} />, path: "/tournaments" },
     { name: "Mint Profile", icon: <User size={20} />, path: "/nft" },
@@ -153,10 +154,19 @@ const Sidebar = () => {
               </div>
               <div className="text-xs text-gray-400">Connected</div>
             </div>
+            <button
+              onClick={() => disconnect?.()}
+              className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-gray-700/50"
+              title="Disconnect Wallet"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
           </div>
         ) : (
           <div className="w-full">
-            <ConnectButton>Connect Wallet</ConnectButton>
+            <ConnectButton className="w-full bg-green-600">Connect Wallet</ConnectButton>
           </div>
         )}
       </div>
