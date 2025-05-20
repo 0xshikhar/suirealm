@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface AIToolCardProps {
   id: string;
@@ -11,6 +12,7 @@ interface AIToolCardProps {
   icon: React.ReactNode;
   color: string;
   iconBg: string;
+  onClick?: (id: string) => void;
 }
 
 const AIToolCard: React.FC<AIToolCardProps> = ({
@@ -20,11 +22,17 @@ const AIToolCard: React.FC<AIToolCardProps> = ({
   icon,
   color,
   iconBg,
+  onClick,
 }) => {
-  const handleUseTool = (toolId: string) => {
-    // Handle tool usage - can be expanded to integrate with OpenAI
-    console.log(`Using tool: ${toolId}`);
-    // Future implementation will call OpenAI APIs
+  const router = useRouter();
+  
+  const handleUseTool = () => {
+    // Call the onClick handler if provided, or navigate to the tool page
+    if (onClick) {
+      onClick(id);
+    } else {
+      router.push(`/ai-tools/${id}`);
+    }
   };
 
   return (
@@ -52,7 +60,7 @@ const AIToolCard: React.FC<AIToolCardProps> = ({
         </p>
         
         <button
-          onClick={() => handleUseTool(id)}
+          onClick={handleUseTool}
           className="w-full py-2.5 px-4 bg-[#98ee2c] hover:bg-[#8de01f] text-black font-medium rounded-lg transition-colors duration-200 flex items-center justify-center"
         >
           Use Tool
