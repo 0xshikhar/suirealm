@@ -2,13 +2,7 @@
 
 ## 1. Project Overview
 
-Suirealm is a platform that allows gamers to Play, Earn, Organize & Stream Games on the CoreDAO blockchain. Our vision is to create an immersive, impartial, and inclusive ecosystem for web3 gamers worldwide. The platform enables game developers to manage their communities, livestream gameplay, and offer playable games directly to users through blockchain integration. Built with Next.js, Prisma database management, and smart contract functionality, Suirealm bridges traditional gaming experiences with Web3 capabilities to create a player-centric gaming environment.
-
-## Smart Contracts
-
-- Suirealm Token : [0xcd34A2d8fFC72E3d587cfAEe3d1B0BdB11859501](https://scan.test2.btcs.network/address/0xcd34A2d8fFC72E3d587cfAEe3d1B0BdB11859501)
-- Suirealm NFT Profile : [0x0b3a2D73D07eA2D5D0D0FB4Db09004f74D92767a ](https://scan.test2.btcs.network/address/0x0b3a2D73D07eA2D5D0D0FB4Db09004f74D92767a)
-- Suirealm Onchain Chess Game NFT : [0x19D45938fD3C9f4847745d6068697C786515Ad43 ](https://scan.test2.btcs.network/address/0x19D45938fD3C9f4847745d6068697C786515Ad43)
+Suirealm is a platform that allows gamers to Play, Earn, Organize & Stream Games on the Sui blockchain. Our vision is to create an immersive, impartial, and inclusive ecosystem for web3 gamers worldwide. The platform enables game developers to manage their communities, livestream gameplay, and offer playable games directly to users through blockchain integration. Built with Next.js, Prisma database management, and smart contract functionality, Suirealm bridges traditional gaming experiences with Web3 capabilities to create a player-centric gaming environment.
 
 ## 2. Market Need
 
@@ -24,12 +18,12 @@ Suirealm is a platform that allows gamers to Play, Earn, Organize & Stream Games
 
 Suirealm addresses these challenges by providing:
 
-- **Interactive Gaming Platform**: Engaging platform for gamers built on the CoreDAO blockchain
+- **Interactive Gaming Platform**: Engaging platform for gamers built on the Sui blockchain
 - **Fair Streaming Economics**: Elimination of high commissions with improved transparency for content creators
 - **Decentralized Asset Ownership**: Players truly own their in-game assets as NFTs
 - **Contribution-Based Growth**: Web3 approach based on airdrops, referrals, and engagement rather than paid advertising
 - **Tournament Infrastructure**: Integrated competitive gaming events with blockchain-based rewards
-- **Onchain Games Portfolio**: Already established collection of 7 popular puzzle games on CoreDAO blockchain
+- **Onchain Games Portfolio**: Already established collection of 7 popular puzzle games on Sui blockchain
 
 ## 4. Current Game Portfolio
 
@@ -68,7 +62,7 @@ Suirealm has already developed 7 puzzle-based onchain games:
 ## 6. Competitive Advantages
 
 - **Fair Compensation Model**: Elimination of high commissions charged by centralized platforms
-- **Blockchain Transparency**: All transactions and ownership records maintained on CoreDAO blockchain
+- **Blockchain Transparency**: All transactions and ownership records maintained on Sui blockchain
 - **Community Governance**: DAO structure ensures decisions benefit the entire ecosystem
 - **Integrated Experience**: Combines gaming, streaming, and community in one platform
 - **Enhanced Discoverability**: Tools to increase visibility for streamers and content creators
@@ -80,7 +74,7 @@ Suirealm has already developed 7 puzzle-based onchain games:
 ### Phase 1: Foundation (Completed)
 
 - Core platform architecture
-- CoreDAO blockchain integration
+- Sui blockchain integration
 - Development of 7 puzzle-based games
 - Basic streaming functionality (Livepeer API integration)
 
@@ -122,4 +116,4 @@ Suirealm has already developed 7 puzzle-based onchain games:
 
 ![Profile Page](https://decenlabs.com/wp-content/uploads/2025/03/7.png)
 
-Suirealm represents a paradigm shift in how games are developed, played, and monetized. By creating a fair, transparent ecosystem built on the CoreDAO blockchain, we're empowering creators, engaging players, and building a sustainable Web3 gaming platform where all participants benefit from their contributions.
+Suirealm represents a paradigm shift in how games are developed, played, and monetized. By creating a fair, transparent ecosystem built on the Sui blockchain, we're empowering creators, engaging players, and building a sustainable Web3 gaming platform where all participants benefit from their contributions.
