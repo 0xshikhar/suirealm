@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-SuiRealm is a platform that allows gamers to Play, Earn, Organize & Stream Games on the Sui blockchain. Our vision is to create an immersive, impartial, and inclusive ecosystem for web3 gamers worldwide. The platform enables game developers to manage their communities, livestream gameplay, and offer playable games directly to users through blockchain integration. Built with Next.js, Prisma database management, and smart contract functionality, SuiRealm bridges traditional gaming experiences with Web3 capabilities to create a player-centric gaming environment.
+Suirealm is a gaming ecosystem on Sui that allows gamers to Play, Earn, Organize & Stream Games using our Agentic Engine and tools. Our vision is to create an immersive, impartial, and inclusive ecosystem for web3 gamers worldwide. The platform enables game developers to manage their communities, livestream gameplay, and offer playable games directly to users through blockchain integration. Built with Next.js, Prisma database management, and smart contract functionality, Suirealm bridges traditional gaming experiences with Web3 capabilities to create a player-centric gaming environment.
 
 ## 2. Market Need
 
@@ -23,7 +23,9 @@ SuiRealm addresses these challenges by providing:
 - **Decentralized Asset Ownership**: Players truly own their in-game assets as NFTs
 - **Contribution-Based Growth**: Web3 approach based on airdrops, referrals, and engagement rather than paid advertising
 - **Tournament Infrastructure**: Integrated competitive gaming events with blockchain-based rewards
-- **Onchain Games Portfolio**: Already established collection of 7 popular puzzle games on Sui blockchain
+- **Onchain Games Portfolio**: Already established collection of 7 popular games on Sui blockchain built by us.
+- **Agentic Tools**: we build easy to use ai tools for users to build and customize their own games on the platform
+- **Social Login**: User can directly login by their Google account using ZKlogin directly on our platform - for seamless onboarding of web2 users on Sui.
 
 ## 4. Current Game Portfolio
 
